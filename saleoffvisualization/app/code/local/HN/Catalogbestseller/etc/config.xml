@@ -1,0 +1,125 @@
+<config>    
+    <modules>
+        <HN_Catalogbestseller>
+            <version>0.1.0</version>
+        </HN_Catalogbestseller>
+    </modules>
+
+<frontend>
+        <routers>
+            <Catalogbestseller>
+                <use>standard</use>
+                <args>
+                    <module>HN_Catalogbestseller</module>
+                    <frontName>Catalogbestseller</frontName>
+                </args>
+            </Catalogbestseller>
+            
+        </routers>  
+        
+         <layout>
+            <updates>
+                <Catalogbestseller module="HN_Catalogbestseller">
+                    <file>HN_Catalogbestseller.xml</file>
+                </Catalogbestseller>
+            </updates>
+        </layout>
+    </frontend>
+    
+    <admin>
+    	
+    	<routers>
+            <Catalogbestseller>
+                <use>admin</use>
+                <args>
+                    <module>HN_Catalogbestseller</module>
+                    <frontName>Catalogbestseller</frontName>
+                </args>
+            </Catalogbestseller>
+        </routers>
+    </admin>
+    
+    <!-- admin html -->
+       
+    <adminhtml>
+        <menu>
+            <Catalogbestseller module="Catalogbestseller">
+                <title>Catalogbestseller</title>
+                <sort_order>71</sort_order>
+                <children>
+                    <warehouse module="Catalogbestseller">
+                        <title>Manage Additional fee</title>
+                        <sort_order>0</sort_order>
+                        <action>Catalogbestseller/adminhtml_Catalogbestseller/index</action>
+                    </warehouse>
+                     <shipmethod module="Catalogbestseller">
+                        <title>Combined Shipping methods</title>
+                        <sort_order>10</sort_order>
+                        <action>Catalogbestseller/adminhtml_shipmethod/index</action>
+                    </shipmethod>
+                   
+                </children>
+                
+            </Catalogbestseller>
+        </menu>
+     
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <HN_Catalogbestseller>
+                            <title>Catalogbestseller Module</title>
+                            <sort_order>10</sort_order>
+                        </HN_Catalogbestseller>
+                    </children>
+                </admin>
+                
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <Catalogbestseller>
+                    <file>HN_Catalogbestseller.xml</file>
+                </Catalogbestseller>
+            </updates>
+        </layout>
+       
+    </adminhtml> 
+    <!-- end of admin html --> 
+   <global>
+   			
+        
+        <resources>
+           
+            
+            
+        </resources>
+   			<blocks>
+   				<Catalogbestseller>
+   					<class>HN_Catalogbestseller_Block</class>
+   				</Catalogbestseller>
+   			</blocks>
+   			
+   			<helpers>
+            <Catalogbestseller>
+                <class>HN_Catalogbestseller_Helper</class>
+            </Catalogbestseller>
+        </helpers>
+   </global>
+   
+   <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Catalogbestseller before="Mage_Adminhtml">HN_Catalogbestseller_Adminhtml</Catalogbestseller>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+   
+</config>

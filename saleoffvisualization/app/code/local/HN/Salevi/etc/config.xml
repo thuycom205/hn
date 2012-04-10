@@ -1,0 +1,130 @@
+<config>    
+    <modules>
+        <HN_Salevi>
+            <version>0.1.0</version>
+        </HN_Salevi>
+    </modules>
+
+<frontend>
+        <routers>
+            <Salevi>
+                <use>standard</use>
+                <args>
+                    <module>HN_Salevi</module>
+                    <frontName>Salevi</frontName>
+                </args>
+            </Salevi>
+            
+        </routers>  
+        
+         <layout>
+            <updates>
+                <Salevi module="HN_Salevi">
+                    <file>HN_Salevi.xml</file>
+                </Salevi>
+            </updates>
+        </layout>
+    </frontend>
+    
+    <admin>
+    	
+    	<routers>
+            <Salevi>
+                <use>admin</use>
+                <args>
+                    <module>HN_Salevi</module>
+                    <frontName>Salevi</frontName>
+                </args>
+            </Salevi>
+        </routers>
+    </admin>
+    
+    <!-- admin html -->
+       
+    <adminhtml>
+        <menu>
+            <Salevi module="Salevi">
+                <title>Salevi</title>
+                <sort_order>71</sort_order>
+                <children>
+                    <warehouse module="Salevi">
+                        <title>Manage Additional fee</title>
+                        <sort_order>0</sort_order>
+                        <action>Salevi/adminhtml_Salevi/index</action>
+                    </warehouse>
+                     <shipmethod module="Salevi">
+                        <title>Combined Shipping methods</title>
+                        <sort_order>10</sort_order>
+                        <action>Salevi/adminhtml_shipmethod/index</action>
+                    </shipmethod>
+                   
+                </children>
+                
+            </Salevi>
+        </menu>
+     
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                         <Salevi translate="title" module="Salevi">
+                                            <title>Sale off visualization Settings</title>
+                          </Salevi>
+                    </children>
+                </admin>
+                
+            </resources>
+        </acl>
+        <layout>
+            <updates>
+                <Salevi>
+                    <file>HN_Salevi.xml</file>
+                </Salevi>
+            </updates>
+        </layout>
+       
+    </adminhtml> 
+    <!-- end of admin html --> 
+   <global>
+   			
+        
+        <resources>
+           
+            
+            
+        </resources>
+   			<blocks>
+   				<Salevi>
+   					<class>HN_Salevi_Block</class>
+   				</Salevi>
+   			</blocks>
+   			
+   			<helpers>
+            <Salevi>
+                <class>HN_Salevi_Helper</class>
+            </Salevi>
+        </helpers>
+   </global>
+   
+   <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Salevi before="Mage_Adminhtml">HN_Salevi_Adminhtml</Salevi>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+   <default>
+   <Salevi>
+   		<active>
+   			1
+   		</active>
+   </Salevi>
+   </default>
+</config>
