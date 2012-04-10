@@ -1,0 +1,104 @@
+<script type="text/javascript">
+//update totals price table after delete or update quality of items
+function updateTotalPrice() {
+	var cart_total = document.getElementById('shopping-cart-totals-table');
+	var baseurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)?>';
+	new Ajax.Request(baseurl + 'ajaxcart/index/total', {
+		method: 'get',
+		onSuccess: function (transport) {
+		var begin =	transport.responseText.indexOf('<table');
+		var end = transport.responseText.indexOf('</ul>');
+		var txtLength = end - begin;
+		var tableContent = transport.responseText.substr(begin, txtLength);
+		var tableC = tableContent.substr(0,tableContent.length -7);
+		cart_total.parentNode.innerHTML = tableContent;
+		}
+		});
+		
+}
+
+function updateTbody() {
+	var tbodyElement = document.getElementById('shopping-cart-table').getElementsByTagName('tbody')[0];
+	if (tbodyElement != null && tbodyElement !=undefined) { 
+	if (tbodyElement != null && tbodyElement != undefined) {
+	var baseurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)?>';
+	new Ajax.Request(baseurl + 'ajaxcart/index/total', {
+		method: 'get',
+		onSuccess: function (transport) {
+		var begin =	transport.responseText.indexOf('<tbody');
+		var end = transport.responseText.indexOf('</tbody>');
+		var txtLength = end - begin;
+		var tableContent = transport.responseText.substr(begin, txtLength);
+		
+		tbodyElement.innerHTML = tableContent;
+		}
+		});
+	}
+	}
+}
+function carthn() {
+	var forms = document.getElementsByTagName('form');
+	var inputs = forms[1].getElementsByTagName('input');
+	var actionurl = forms[1].action;
+	
+	var buttons = forms[1].getElementsByTagName('button');
+	buttons[1].setAttribute('type','button');
+	buttons[1].setAttribute('onclick','updateCart()');
+}
+function updateCart() {
+	var forms = document.getElementsByTagName('form');
+	var inputs = forms[1].getElementsByTagName('input');
+	var actionurl = forms[1].action;
+	actionurl += '?' + inputs[0].name + '=' + inputs[0].value;
+	
+	for (var i=1; i < inputs.length; i++) {
+		actionurl += '&' +inputs[i].name + '=' + inputs[i].value;
+	}
+	new Ajax.Request(actionurl,{method:'get'
+		,
+		onLoading:function () {
+        	var imgsrc='<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)?>' + 'scriptaculous/spinner.gif';
+        	var htlm = '<div style="margin-left:200px"><img src="'+ imgsrc + '"</div>';
+        	//alert(htlm);
+        	Modalbox.show(htlm);
+    	},
+		onSuccess: function(transport){
+			Modalbox.show('<div style="margin-left:200px">Sucess</div>');
+			updateCartTop();
+			updateTbody();
+			updateTotalPrice();
+		}
+		});
+}
+document.observe("dom:loaded", function() { carthn();});
+
+function addDel() {
+	var delbuts = document.getElementsByClassName('btn-remove2');
+	
+	for (var i = 0; i < delbuts.length; i++ ) {
+		delbuts[i].setAttribute('id', delbuts[i].getAttribute('href'));
+		delbuts[i].setAttribute('href','#');
+		delbuts[i].setAttribute('onclick','deleteItem(this)');
+	}
+}
+
+	function deleteItem(obj) {
+		var delurl = obj.getAttribute('id');
+		new Ajax.Request(delurl, {method:'get',
+			onLoading:function () {
+            	var imgsrc='<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)?>' + 'scriptaculous/spinner.gif';
+            	var htlm = '<div style="margin-left:200px"><img src="'+ imgsrc + '"</div>';
+            	//alert(htlm);
+            	Modalbox.show(htlm);
+        	},
+			 onSuccess:function(transport) {
+				 Modalbox.show('<div style="margin-left:200px">Sucess</div>');
+			obj.parentNode.parentNode.setAttribute('style','display:none');
+			updateCartTop();
+			updateTbody();
+			updateTotalPrice();
+			}});
+	}
+	document.observe("dom:loaded", function() { addDel();});
+
+</script>

@@ -1,0 +1,228 @@
+<?xml version="1.0"?>
+	<!--
+		/** * Magento * * NOTICE OF LICENSE * * This source file is subject to
+		the Open Software License (OSL 3.0) * that is bundled with this
+		package in the file LICENSE.txt. * It is also available through the
+		world-wide-web at this URL: *
+		http://opensource.org/licenses/osl-3.0.php * If you did not receive a
+		copy of the license and are unable to * obtain it through the
+		world-wide-web, please send an email * to license@magentocommerce.com
+		so we can send you a copy immediately. * * @category design_default *
+		@package Mage * @copyright Copyright (c) 2004-2007 Irubin Consulting
+		Inc. DBA Varien (http://www.varien.com) * @license
+		http://opensource.org/licenses/osl-3.0.php Open Software License (OSL
+		3.0) */
+	-->
+<layout version="0.1.0">
+	<default>
+
+<reference name="head">
+ <action method="addItem">
+	    <type>js_css</type>
+	    <name>scriptaculous/modalbox.css</name>
+	    <params/><!--<if/><condition>can_load_calendar_js</condition>--></action>
+	
+			<action method="addItem">
+				<type>js</type>
+				<name>scriptaculous/modalbox.js</name>
+				<!--
+					<params/><if/><condition>can_load_calendar_js</condition>
+				-->
+			</action>
+		<action method="addItem">
+			<type>js_css</type>
+			<name>jquerycss/jquery-ui-1.8.14.custom.css</name>
+			<params /><!--<if/><condition>can_load_calendar_js</condition>-->
+		</action>
+		<action method="addItem">
+			<type>js</type>
+			<name>jquery/jquery-1.5.1.min.js</name>
+		</action>
+		<action method="addItem">
+			<type>js</type>
+			<name>jquery/jquery-ui-1.8.14.custom.min.js</name>
+			<!--
+				<params/><if/><condition>can_load_calendar_js</condition>
+			-->
+		</action>
+		<action method="addItem">
+			<type>js_css</type>
+			<name>hungnam/boxy/boxy.css</name>
+			<params /><!--<if/><condition>can_load_calendar_js</condition>-->
+		</action>
+		<action method="addItem">
+			<type>js</type>
+			<name>hungnam/boxy/jquery.boxy.js</name>
+		</action>
+		<action method="addItem">
+			<type>js</type>
+			<name>jquery/noc.js</name>
+			<!--
+				<params/><if/><condition>can_load_calendar_js</condition>
+			-->
+		</action>
+               
+               <action method="addItem">
+				<type>js</type>
+				<name>varien/product.js</name>
+				<!--
+					<params/><if/><condition>can_load_calendar_js</condition>
+				-->
+			</action>
+			 
+               <action method="addItem">
+				<type>js</type>
+				<name>varien/configurable.js</name>
+				<!--
+					<params/><if/><condition>can_load_calendar_js</condition>
+				-->
+			</action>
+			<action method="addItem">
+				<type>js</type>
+				<name>calendar/calendar.js</name>
+				<!--
+					<params/>varien/configurable.js<if/><condition>can_load_calendar_js</condition>
+				-->
+			</action>
+			<action method="addItem">
+				<type>js</type>
+				<name>calendar/calendar-setup.js</name>
+				<!--
+					<params/><if/><condition>can_load_calendar_js</condition>
+				-->
+			</action>
+	</reference>
+	
+	<reference name="content">
+	<block type="core/template" name="hn_ajax_addcart_button" template="hn_ajaxcart/addcartbutton.phtml" />
+	</reference>
+	</default>
+	<checkout_cart_index>
+	<reference name="content">
+	<block type="core/template"  name="hnajax.cart" template="hn_ajaxcart/checkoutcart.phtml"/>
+	</reference>
+	</checkout_cart_index>
+	<ajaxcart_index_total>
+	  <label>Shopping Cart</label>
+       
+        <!-- Mage_Checkout -->
+        <reference name="root">
+            <action method="setTemplate"><template>hn_ajaxcart/empty.phtml</template></action>
+        </reference>
+        <reference name="content">
+            <block type="checkout/cart" name="checkout.cart">
+                <action method="setCartTemplate"><value>hn_ajaxcart/cart.phtml</value></action>
+                <action method="setEmptyTemplate"><value>checkout/cart/noItems.phtml</value></action>
+                <action method="chooseTemplate"/>
+                <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>checkout/cart/item/default.phtml</template></action>
+                <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/cart/item/default.phtml</template></action>
+                <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/cart/item/default.phtml</template></action>
+
+<!--                 <block type="core/text_list" name="checkout.cart.top_methods" as="top_methods" translate="label"> -->
+<!--                     <label>Payment Methods Before Checkout Button</label> -->
+<!--                     <block type="checkout/onepage_link" name="checkout.cart.methods.onepage" template="checkout/onepage/link.phtml"/> -->
+<!--                 </block> -->
+
+<!--                 <block type="page/html_wrapper" name="checkout.cart.form.before" as="form_before" translate="label"> -->
+<!--                     <label>Shopping Cart Form Before</label> -->
+<!--                 </block> -->
+
+                <block type="core/text_list" name="checkout.cart.methods" as="methods" translate="label">
+                    <label>Payment Methods After Checkout Button</label>
+                    <block type="checkout/onepage_link" name="checkout.cart.methods.onepage" template="checkout/onepage/link.phtml"/>
+                    <block type="checkout/multishipping_link" name="checkout.cart.methods.multishipping" template="checkout/multishipping/link.phtml"/>
+                </block>
+
+<!--                 <block type="checkout/cart_coupon" name="checkout.cart.coupon" as="coupon" template="checkout/cart/coupon.phtml"/> -->
+<!--                 <block type="checkout/cart_shipping" name="checkout.cart.shipping" as="shipping" template="checkout/cart/shipping.phtml"/> -->
+<!--                 <block type="checkout/cart_crosssell" name="checkout.cart.crosssell" as="crosssell" template="checkout/cart/crosssell.phtml"/> -->
+
+                <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
+            </block>
+        </reference>
+	</ajaxcart_index_total>
+	<ajaxcart_index_sidebar>
+	<remove name="hn_ajax_addcart_button"/>
+	<reference name="root">
+            <action method="setTemplate"><template>hn_ajaxcart/empty.phtml</template></action>
+        </reference>
+	
+	 <reference name="content">
+	 	<block type="checkout/cart_sidebar" name="sidebar" template="hn_ajaxcart/sidebar.phtml"/>
+	 </reference>
+	 </ajaxcart_index_sidebar>
+	 
+	 <ajaxcart_index_group translate="label"><label>Catalog Product View (Any)</label>
+	 <!-- Mage_Catalog --><reference name="root">
+	 <action method="setTemplate"><template>hn_ajaxcart/empty.phtml</template></action>
+	 </reference><reference name="head"><action method="addJs">
+	 <script>varien/product.js</script></action><action method="addItem">
+	 <type>skin_js</type><name>js/scp_product_extension.js</name></action>
+	 <action method="addItem"><type>js_css</type>
+	 <name>calendar/calendar-win2k-1.css</name><params/>
+	 <!--<if/><condition>can_load_calendar_js</condition>--></action>
+	 <action method="addItem"><type>js</type><name>calendar/calendar.js</name>
+	 <!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+	 <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name>
+	 <!--<params/><if/><condition>can_load_calendar_js</condition>--></action>
+	 </reference>
+	 <reference name="content">
+	  <block type="ajaxcart/group" name="ajax.group" template="hn_ajaxcart/group.phtml" />
+	 </reference>
+	 </ajaxcart_index_group><!-- 
+Product view Ajax added by LuuThanhThuy
+ --><!--
+Product send to friend-->
+ 
+	 <ajaxcart_index_config translate="label"><label>Catalog Product View (Any)</label>
+	 <!-- Mage_Catalog -->
+	 <reference name="root">
+	   <action method="setTemplate">
+	         <template>hn_ajaxcart/empty.phtml</template>
+	   </action>
+	  </reference>
+	  
+     <reference name="content">
+        <remove name="hn_ajax_addcart_button"/>
+	  <block type="ajaxcart/config" name="ajax.product" template="hn_ajaxcart/configtest.phtml" />
+	 </reference>
+	 </ajaxcart_index_config>
+	 
+	 <ajaxcart_idex_configjs>
+	 		 <reference name="root">
+	        	 <action method="setTemplate">
+	         		<template>hn_ajaxcart/empty.phtml</template>
+	         	</action>
+	          </reference>
+	           <reference name="content">
+	                 <remove name="hn_ajax_addcart_button"/>
+	           	    <block type="ajaxcart/config" name="ajax.product" template="hn_ajaxcart/configjs.phtml" />
+	           </reference>
+	 </ajaxcart_idex_configjs>
+	 
+	 <!-- add by Luu Thanh Thuy -->
+	 <ajaxcart_cart_index>
+	     <label>Shopping Cart</label>
+        <remove name="right"/>
+        <remove name="left"/>
+        <!-- Mage_Checkout -->
+        <reference name="root">
+            <action method="setTemplate"><template>hn_ajaxcart/empty.phtml</template></action>
+        </reference>
+         <reference name="content">
+        	<remove name="hn_ajax_addcart_button"/>
+             <block type="checkout/cart" name="checkout.cart">
+                <action method="setCartTemplate"><value>checkout/cart.phtml</value></action>
+                <action method="setEmptyTemplate"><value>checkout/cart/noItems.phtml</value></action>
+                <action method="chooseTemplate"/>
+                <action method="addItemRender"><type>simple</type><block>checkout/cart_item_renderer</block><template>checkout/cart/item/default.phtml</template></action>
+                <action method="addItemRender"><type>grouped</type><block>checkout/cart_item_renderer_grouped</block><template>checkout/cart/item/default.phtml</template></action>
+                <action method="addItemRender"><type>configurable</type><block>checkout/cart_item_renderer_configurable</block><template>checkout/cart/item/default.phtml</template></action>
+
+                <block type="checkout/cart_totals" name="checkout.cart.totals" as="totals" template="checkout/cart/totals.phtml"/>
+            </block>	    
+	    </reference>
+	 </ajaxcart_cart_index>
+	 <!-- add by Luu Thanh Thuy -->
+	 
+</layout> 

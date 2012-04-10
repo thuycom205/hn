@@ -1,0 +1,39 @@
+<h1>Welcome to the ajax cart</h1>
+<table id="super-product-table" class="data-table grouped-items-table">
+    <colgroup><col>
+    <col>
+    <col width="1">
+    </colgroup><thead>
+        <tr class="first last">
+            <th>Product Name</th>
+                        <th class="a-right">Price</th>
+                                    <th class="a-center">Qty</th>
+                    </tr>
+    </thead>
+    <tbody>
+<?php $childs = $this->getProducts();
+foreach ($childs as $child) {
+	
+	$product = $this->initProduct($child) ;
+	?>
+           <tr class="first odd">
+            <td><?php echo $product->getName()?></td>
+                   <td class="a-right">
+                      <div class="price-box">
+                           <span id="product-price-<?php echo $child ?>" class="regular-price">
+                           <span class="price"><?php echo $product->getPrice() ?></span> 
+                        
+                      </div>
+
+                
+              </td>
+              <td class="a-center last">
+                           <input type="text" class="input-text qty"
+                     title="Qty" value="0" maxlength="12" name="super_group[<?php echo $child ?>]">
+               </td>
+            </tr>
+	
+	
+<?php } ?>
+            </tbody>
+</table>

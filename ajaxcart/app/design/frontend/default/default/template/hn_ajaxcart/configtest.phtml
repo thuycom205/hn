@@ -1,0 +1,47 @@
+
+<?php $_product = $this->getProduct(); ?>
+
+
+<form action="<?php echo Mage::helper('checkout/cart')->getAddUrl($_product, null); ?>" method="post" id="product_addtocart_form"<?php if($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+        <div class="no-display">
+            <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" />
+            <input type="hidden" name="related_product" id="related-products-field" value="" />
+        </div>
+<?php $atts = $this->getJsonHTML();?>
+
+<div id="product-options-wrapper" class="product-options">
+    
+    <dl class="last">
+    <?php foreach ($atts as $key_att=>$value_att) {?>
+            <dt><label class="required"><em>*</em><?php echo $value_att['label']?></label></dt>
+            
+        <dd>
+            <div class="input-box">
+                <select class="required-entry super-attribute-select" id="attribute<?php echo $key_att ?>" name="super_attribute[<?php echo $key_att ?>]">
+                    
+                  <option value="">Choose an Option...</option></select>
+              </div>
+        </dd>
+           
+        <?php  } ?>
+        </dl>
+   
+
+            <p class="required">* Required Fields</p>
+    </div>
+    <div class="product-options-bottom">
+    <?php echo $this->getPriceHtml($_product, false, '_clone') ?>
+    
+    <div class="add-to-cart">
+                <label for="qty">Qty:</label>
+        <input type="text" class="input-text qty" title="Qty" value="1" maxlength="12" id="qty" name="qty">
+                <button onclick="hn_addcart()"  title="Add to Cart" type="button"><span><span>Add to Cart</span></span></button>
+        </div>
+     </div>
+    </form>
+ <script type="text/javascript">
+         var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+
+        var spConfig = new Product.Config(<?php echo $this->getJsonConfig() ?>);
+var xxx  = <?php echo $this->getJsonConfig() ?>;
+    </script>

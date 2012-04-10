@@ -1,0 +1,341 @@
+<div id="cart_anchor" style="display:none"></div>
+<script type="text/javascript" >
+Event.observe(window, 'load', recalculateTax);
+Event.observe(window, 'load', registerTaxRecalcs);
+   var x = "";
+var y = "";
+var spConfig = "";
+function registerTaxRecalcs()
+{
+    if (typeof dynamicTaxes == 'undefined') {
+        return;
+    }
+
+    for (var i=0; i<dynamicTaxes.length; i++) {
+        Event.observe($(dynamicTaxes[i]), 'change', recalculateTax);
+    }
+    Event.observe($('tax_class_id'), 'change', recalculateTax);
+}
+
+var priceFormat = {"pattern":"$%s","precision":2,"requiredPrecision":2,"decimalSymbol":".","groupSymbol":",","groupLength":3,"integerRequired":1};
+var taxRates = {"value_1":8.25,"value_2":8.25,"value_4":0};
+
+function recalculateTax()
+{
+    if (typeof dynamicTaxes == 'undefined') {
+        return;
+    }
+
+    for (var i=0; i<dynamicTaxes.length; i++) {
+        var code = dynamicTaxes[i];
+        var span = $('dynamic-tax-' + code);
+        var input = $(code);
+
+        if (!input.value) {
+            span.innerHTML = '';
+            continue;
+        }
+
+        var rate = 0;
+        var taxClass = $('tax_class_id').options[$('tax_class_id').selectedIndex].value;
+        eval('var value = taxRates.value_' + taxClass);
+
+        if (value != undefined) {
+            rate = value;
+        }
+
+        var spanValue = '';
+        if (rate != 0) {
+            spanValue = ' ' + formatCurrency(input.value/(100+rate)*rate, priceFormat);
+        }
+        span.innerHTML = spanValue;
+    }
+}
+
+// Bind tab changes
+function bindActiveProductTab(event) {
+    if(event.tab && event.tab.name && $('store_switcher')){
+        $('store_switcher').switchParams = 'active_tab/'+event.tab.name+'/';
+    }
+}
+///////////////////////////
+
+function replacebut() {
+var cartbut = document.getElementsByClassName('button btn-cart');
+var myLink = new Array();
+for (var i = 0; i < cartbut.length; i++ ) {
+onclickAtt= cartbut[i].getAttribute('onclick');
+buyLink = onclickAtt.substr('setLocation'.length + 2)
+buyLink = buyLink.substr(0, buyLink.length-2);
+myLink[i] = buyLink;
+
+if(cartbut[i].getAttribute('onclick')== 'productAddToCartForm.submit()' || cartbut[i].getAttribute('onclick') =='hn_addcart()') {
+	cartbut[i].setAttribute('onclick','hn_addcart()');
+} else {
+cartbut[i].setAttribute('onclick','doit(this)');
+cartbut[i].setAttribute('id',myLink[i]);
+}
+}
+}
+function navigate(url) {
+new Ajax.Request(url, {
+  method: 'get'
+});
+}
+
+function doit(obj) {
+	var restText;
+	var nnL = obj.getAttribute('id');
+	var pNode = obj.parentNode;
+	var ultag = pNode.getElementsByTagName('ul');
+	var litag = ultag[0].getElementsByTagName('li');
+	var atag =litag[0].getElementsByTagName('a');
+	var uselink = atag[0].href;
+	var productId = uselink.substr(uselink.indexOf('/add/product/') + '/add/product/'.length );
+	var isConfig = false;
+	new Ajax.Request('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)?>' + 'ajaxcart/index/type?product='+ productId, {method:'get',
+                onLoading: function() {
+                                     var imgsrc='<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)?>' + 'scriptaculous/spinner.gif';
+                  	             var htlm = '<div id="aaloading" style="margin-left:5px"><img src="'+ imgsrc + '"</div>';
+                                     new Boxy(htlm, {title: "Loading", draggable: true});
+
+                                 }, 
+		onSuccess: function(transport){
+		if (transport.responseText == 'configurable') {
+			isConfig = true;
+			new Ajax.Request('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)?>' + 'ajaxcart/index/config?product='+ productId, {method:'get',                  onLoading: function() {
+                                     var imgsrc='<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)?>' + 'scriptaculous/spinner.gif';
+                  	             var htlm = '<div id="aaloading" style="margin-left:5px"><img src="'+ imgsrc + '"</div>';
+                                     new Boxy(htlm, {title: "Loading", draggable: true});
+
+                                 },
+				onSuccess: function(transport){
+
+				restText = transport.responseText+ '<button type ="button" class="button btn-cart" style="margin-left:180px; margin-top:4px" name="addtocart" value="add to cart" onclick="hn_addcart()"><span>Add to cart</span></button>';
+				//$('ajax_anchor').innerHTML = restText;
+				//Modalbox.show($('ajax_anchor'),{title:"Ajax cart demo",width:500});
+				//Modalbox.show(restText,{title:"Ajax cart demo",width:500});
+if (jQuery('.boxy-wrapper')) 
+jQuery('.boxy-wrapper').remove();
+document.getElementById('cart_anchor').innerHTML = restText.substr(restText.indexOf('script') -2, restText.length);
+//Boxy.get(jQuery('#loading')).hide();
+
+  new Boxy(restText, {title: "Choose the option below", draggable: true,afterShow:function() {var spConfig = new Product.Config(xxx);} });
+
+
+
+ <?php
+$className = Mage::getConfig()->getBlockClassName('catalog/product_view_type_configurable');
+$block = new $className();
+$block->setProduct(Mage::getModel('catalog/product')->load(126));
+$priceName = Mage::getConfig()->getBlockClassName('catalog/product_view');
+$price = new $priceName();
+$price->setProduct(Mage::getModel('catalog/product')->load(126));
+//Mage::register('product', Mage::getModel('catalog/product')->load(126));
+ ?>
+ 
+ 
+				
+				},
+                                 onComplete: function() {
+
+console.log('complete');
+                                 },
+				 onFailure: function(){ alert('Something went wrong...'); }
+			 
+				});
+		} else if (transport.responseText == 'grouped') {
+			isGroup = true;
+			new Ajax.Request('<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)?>' + 'ajaxcart/index/group?product='+ productId, {method:'get',
+				onSuccess: function(transport){
+				restText = transport.responseText+ '<button type ="button" class="button btn-cart" style="margin-left:180px; margin-top:4px" name="addtocart" value="add to cart" onclick="hn_addcart()"><span>Add to cart</span></button>';
+				//$('ajax_anchor').innerHTML = restText;
+				//Modalbox.show($('ajax_anchor'),{title:"Ajax cart demo",width:500});
+				Modalbox.show(restText,{title:"Ajax cart demo",width:500});
+				//document.getElementById('MB_ajax_anchor').setAttribute('style','display:block');
+				//document.getElementById('MB_content').setAttribute('style','display:block');
+				
+				},
+				 onFailure: function(){ alert('Something went wrong...'); }
+			 
+				});
+		} else {
+			new Ajax.Request(nnL, {
+				  method: 'get',
+				  onLoading:function () {
+					  var imgsrc='<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)?>' + 'scriptaculous/spinner.gif';
+                  	var htlm = '<div style="margin-left:200px"><img src="'+ imgsrc + '"</div>';
+                  	//alert(htlm);
+                  	Modalbox.show(htlm, {title:"Ajax cart demo"});
+              	},
+              	onSuccess: function () {
+              		Modalbox.show('<div style="margin-left:150px;font-size:1.2em">Item add to your cart sucessfully</div>',{title:"Ajax cart demo"});
+              		updateCartSideBar();
+              		updateCartTop();
+              		
+              		
+              		var tbodyElement = document.getElementById('shopping-cart-table').getElementsByTagName('tbody')[0];
+              		if (tbodyElement != null && tbodyElement !=undefined) { 
+              		updateTbody();
+              		}
+              		
+              		if(window.updateTotalPrice) {
+        			updateTotalPrice();
+              		}    
+                  	
+              	}
+				});
+		}
+		
+	    document.getElementById('MB_ajax_anchor').setAttribute('style','display:block');
+		document.getElementById('MB_content').setAttribute('style','display:block');
+		
+		},
+		 onFailure: function(){ alert('Something went wrong...'); }
+	 
+		});
+	
+	
+}
+document.observe("dom:loaded", function() {replacebut();});
+function updateCartTop() {
+	var baseurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)?>';
+	var carttop = document.getElementsByClassName('top-link-cart')[0];
+	new Ajax.Request(baseurl + 'ajaxcart/index/index', {method:'get',
+		 onSuccess: function(transport) {carttop.innerHTML = transport.responseText;
+	}});
+}
+
+//update cart side bar
+function updateCartSideBar() {
+	var baseurl = '<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_LINK)?>';
+	var sidebarE = document.getElementsByClassName('block block-cart')[0];
+	new Ajax.Request(baseurl + 'ajaxcart/index/sidebar',{
+			method: 'get',
+			onSuccess: function(transport) {
+				var beginn = transport.responseText.indexOf('<div class="block-title">');
+				
+				var end = transport.responseText.indexOf('</ol>');
+				
+				
+				var content = transport.responseText.substr(beginn,end-beginn);
+				
+				sidebarE.innerHTML = content;
+				}
+		});
+}
+</script>
+<div id="ajax_anchor" style="display:none"></div>
+<script type="text/javascript">
+    //<![CDATA[
+            var productAddToCartForm = new VarienForm('product_addtocart_form');
+            productAddToCartForm.submit = function(){
+                   
+                            this.form.submit();
+                   
+            }.bind(productAddToCartForm);
+
+            function hn_addcart() {
+            	var productAddToCartForm = new VarienForm('product_addtocart_form');
+            	
+                productAddToCartForm.submit = function(button, url) {
+                    if (this.validator.validate()) {
+                        var form = this.form;
+                        var oldUrl = form.action;
+
+                        if (url) {
+                           form.action = url;
+                        }
+                        var e = null;
+                        try {
+                            this.form.submit();
+                        } catch (e) {
+                        }
+                        this.form.action = oldUrl;
+                        if (e) {
+                            throw e;
+                        }
+
+                        if (button && button != 'undefined') {
+                            button.disabled = true;
+                        }
+                    }
+                }.bind(productAddToCartForm);
+
+                productAddToCartForm.submitLight = function(button, url){
+                    if(this.validator) {
+                        var nv = Validation.methods;
+                        delete Validation.methods['required-entry'];
+                        delete Validation.methods['validate-one-required'];
+                        delete Validation.methods['validate-one-required-by-name'];
+                        if (this.validator.validate()) {
+                            if (url) {
+                                this.form.action = url;
+                            }
+                            this.form.submit();
+                        }
+                        Object.extend(Validation.methods, nv);
+                    }
+                }.bind(productAddToCartForm);
+                var send_url = productAddToCartForm.form.action;
+                var parameterss='';
+            	var form_select_Ele = productAddToCartForm.form.getElementsByTagName('select');
+            	if(form_select_Ele != null && form_select_Ele != undefined && form_select_Ele.length > 0) {
+                	
+                	parameterss += '?' + form_select_Ele[0].name + '=';
+                	parameterss += form_select_Ele[0].value;
+            	for (var i = 1; i < form_select_Ele.length; i++ ) {
+                	if(form_select_Ele[i] != undefined) {
+                	parameterss += '&' + form_select_Ele[i].name + '=';
+                	parameterss += form_select_Ele[i].value;
+                	if(form_select_Ele[i].value == undefined || form_select_Ele[i].value =='' || form_select_Ele[i].value == null) {
+                    	var boxcontent = "Please select the require options";
+                    	alert(boxcontent);
+                    	return false;
+                	}
+            	}
+            	}
+            }
+            	var form_input_Ele =  productAddToCartForm.form.getElementsByTagName('input');
+            	if(form_input_Ele != null && form_input_Ele != undefined && form_input_Ele.length > 0 ) {
+            		for (var i = 0; i < form_input_Ele.length; i++ ) {
+                		if(form_input_Ele[i].value !='') {
+                    	parameterss += '&' + form_input_Ele[i].name + '=';
+                    	parameterss += form_input_Ele[i].value;
+                		}
+                    	
+                	}
+            	}
+            	alert ('hehe');
+            	alert (send_url);
+            	new Ajax.Request(send_url+ parameterss,{ method:'get',parameters:parameterss,
+                	onLoading:function () {
+                    	var imgsrc='<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_JS)?>' + 'scriptaculous/spinner.gif';
+                    	var htlm = '<div style="margin-left:200px"><img src="'+ imgsrc + '"</div>';
+                    	//alert(htlm);
+                    	Modalbox.show(htlm);
+                	},
+                	onSuccess: function () {
+                		Modalbox.show('<div style="margin-left:200px">Sucess</div>');
+                		updateCartTop();
+                		updateCartSideBar();
+                		var tbodyElement = document.getElementById('shopping-cart-table').getElementsByTagName('tbody')[0];
+                  		if (tbodyElement != null && tbodyElement !=undefined) { 
+                  		updateTbody();
+                  		}
+                  		if(window.updateTotalPrice) {
+                			updateTotalPrice();
+                      		}  
+                	}
+                	});
+            }
+
+
+
+
+
+
+            
+           
+    //]]>
+    </script>

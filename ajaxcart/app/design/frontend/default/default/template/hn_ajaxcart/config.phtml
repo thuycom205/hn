@@ -1,0 +1,49 @@
+<?php echo $this->getJsonHTML();?>
+<script type="text/javascript">
+var Attribute = <?php echo $this->getJsonConfig()?> ;
+var render_jax_first = 0;
+for (var attributes in Attribute) {
+	//alert (attributes);
+	if (attributes == "attributes") {
+		for (var key in Attribute['attributes']) {
+			if (render_jax_first  ==0) {
+				render_jax_first++;
+				var select_name = '"ajax_select_' + Attribute['attributes'][key].code + '"';
+				//alert(select_name);
+				var selectE = document.getElementById(select_name);
+				//alert (selectE);
+				var html = "";
+				//selectE.innerHTML = "";
+				for (var j = 0; j < Attribute['attributes'][key].options.length; j++) {
+					 //alert (Attribute['attributes'][key].options[j].label);
+					 html += "<option > " + (Attribute['attributes'][key].options[j].label) + "</option>";
+						//alert (Attribute['attributes'][key].options[j].products);
+				 }
+				//selectE.innerHTML = html;
+			}
+			//alert (key);
+			//alert (Attribute['attributes'][key].label);
+			 for (var j = 0; j < Attribute['attributes'][key].options.length; j++) {
+				 //alert (Attribute['attributes'][key].options[j].label);
+					alert (Attribute['attributes'][key].options[j].products[0]);
+			 }
+		}
+	}
+	   
+}
+
+var p =
+{
+    "p1": "value1",
+    "p2": "value2",
+    "p3": "value3"
+};
+for (var key in p) {
+	  if (p.hasOwnProperty(key)) {
+	  //  alert(key + " -> " + p[key]);
+	  }
+	}
+
+</script>
+
+
