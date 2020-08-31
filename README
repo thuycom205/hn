@@ -1,1 +1,2 @@
 Hello
+        this.taskP.getRootPanel().setPreferredSize(new Dimension(this.getContentPane().getWidth() -10, this.getContentPane().getHeight() -10));
